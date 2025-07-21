@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品购物系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .panel-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .panel-title i {
+            margin-right: 10px;
+            color: #667eea;
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-item:hover {
+            background-color: #f0f4ff;
+        }
+        
+        .category-item.active {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .category-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .product-price {
+            color: #e74c3c;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .product-desc {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background: #5a6fd1;
+        }
+        
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 12px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin: 0 5px;
+            padding: 3px;
+        }
+        
+        .remove-item {
+            color: #95a5a6;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .cart-total {
+            text-align: right;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cart-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .copy-list {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .copy-list:hover {
+            background: #27ae60;
+        }
+        
+        .clear-cart {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .clear-cart:hover {
+            background: #c0392b;
+        }
+        
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #2ecc71;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message.show {
+            opacity: 1;
+        }
+        
+        .message i {
+            margin-right: 8px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+        }
+        
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>商品购物系统</h1>
+            <p>浏览商品 • 加入购物车 • 复制购物清单</p>
+        </header>
+        
+        <div class="main-content">
+            <!-- 分类面板 -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-list"></i> 商品分类</h2>
+                <ul class="category-list" id="categoryList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>加载分类中...</p>
+                    </div>
+                </ul>
+            </div>
+            
+            <!-- 商品列表 -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-store"></i> 商品列表</h2>
+                <div class="products-grid" id="productList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>加载商品中...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 购物车 -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-shopping-cart"></i> 购物车</h2>
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-state">
+                        <i class="fas fa-cart-arrow-down"></i>
+                        <p>购物车是空的</p>
+                    </div>
+                </div>
+                <div class="cart-total" id="cartTotal">
+                    总计: ¥0.00
+                </div>
+                <div class="cart-actions">
+                    <button class="cart-btn copy-list" id="copyListBtn">
+                        <i class="fas fa-copy"></i> 复制清单
+                    </button>
+                    <button class="cart-btn clear-cart" id="clearCartBtn">
+                        <i class="fas fa-trash"></i> 清空
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="message" id="message">
+        <i class="fas fa-check-circle"></i>
+        <span>购物清单已复制</span>
+    </div>
+
+    <script>
+        // 远程JSON数据URL（替换为您托管的JSON文件URL）
+        const DATA_URL = 'https://raw.githubusercontent.com/zhuhh359627543/maimi/refs/heads/main/maimi.json';
+        
+        // 应用数据
+        let categories = [];
+        let products = [];
+        let cart = [];
+        let currentCategory = "all";
+        
+        // DOM元素
+        const categoryListEl = document.getElementById('categoryList');
+        const productListEl = document.getElementById('productList');
+        const cartItemsEl = document.getElementById('cartItems');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const copyListBtn = document.getElementById('copyListBtn');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const messageEl = document.getElementById('message');
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            
+            // 事件监听
+            copyListBtn.addEventListener('click', copyCartList);
+            clearCartBtn.addEventListener('click', clearCart);
+        });
+        
+        // 从远程获取JSON数据
+        async function fetchData() {
+            try {
+                const response = await fetch(DATA_URL);
+                const data = await response.json();
+                
+                categories = data.categories || [];
+                products = data.products || [];
+                
+                renderCategories();
+                renderProducts();
+            } catch (error) {
+                console.error('获取数据失败:', error);
+                showError();
+            }
+        }
+        
+        // 渲染分类列表
+        function renderCategories() {
+            categoryListEl.innerHTML = '';
+            
+            // 添加"所有商品"选项
+            const allItem = document.createElement('li');
+            allItem.className = `category-item ${currentCategory === "all" ? 'active' : ''}`;
+            allItem.innerHTML = '<i class="fas fa-star"></i> 所有商品';
+            allItem.addEventListener('click', () => filterProducts('all'));
+            categoryListEl.appendChild(allItem);
+            
+            // 添加分类项
+            categories.forEach(category => {
+                const item = document.createElement('li');
+                item.className = `category-item ${currentCategory === category.name ? 'active' : ''}`;
+                item.innerHTML = `<i class="fas fa-${category.icon || 'tag'}"></i> ${category.name}`;
+                item.addEventListener('click', () => filterProducts(category.name));
+                categoryListEl.appendChild(item);
+            });
+        }
+        
+        // 按分类筛选商品
+        function filterProducts(category) {
+            currentCategory = category;
+            renderCategories();
+            renderProducts();
+        }
+        
+        // 渲染商品列表
+        function renderProducts() {
+            productListEl.innerHTML = '';
+            
+            const filteredProducts = currentCategory === "all" 
+                ? products 
+                : products.filter(p => p.category === currentCategory);
+            
+            if (filteredProducts.length === 0) {
+                productListEl.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fas fa-search"></i>
+                        <p>该分类下暂无商品</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const productEl = document.createElement('div');
+                productEl.className = 'product-card';
+                productEl.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">¥${product.price.toFixed(2)}</div>
+                        <p class="product-desc">${product.description}</p>
+                        <button class="add-to-cart" data-id="${product.id}">
+                            <i class="fas fa-cart-plus"></i> 加入购物车
+                        </button>
+                    </div>
+                `;
+                productListEl.appendChild(productEl);
+            });
+            
+            // 添加事件监听
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', addToCart);
+            });
+        }
+        
+        // 添加商品到购物车
+        function addToCart(e) {
+            const productId = parseInt(e.target.closest('button').getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            
+            // 检查是否已在购物车中
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            renderCart();
+            showMessage('商品已添加到购物车');
+        }
+        
+        // 渲染购物车
+        function renderCart() {
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-cart-arrow-down"></i>
+                        <p>购物车是空的</p>
+                    </div>
+                `;
+                cartTotalEl.textContent = '总计: ¥0.00';
+                return;
+            }
+            
+            cartItemsEl.innerHTML = '';
+            
+            cart.forEach(item => {
+                const cartItemEl = document.createElement('div');
+                cartItemEl.className = 'cart-item';
+                cartItemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">¥${item.price.toFixed(2)}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
+                            <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                            <span class="remove-item" data-id="${item.id}">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                cartItemsEl.appendChild(cartItemEl);
+            });
+            
+            // 计算总价
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotalEl.textContent = `总计: ¥${total.toFixed(2)}`;
+            
+            // 添加事件监听
+            document.querySelectorAll('.minus').forEach(btn => {
+                btn.addEventListener('click', decreaseQuantity);
+            });
+            
+            document.querySelectorAll('.plus').forEach(btn => {
+                btn.addEventListener('click', increaseQuantity);
+            });
+            
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', updateQuantity);
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(span => {
+                span.addEventListener('click', removeItem);
+            });
+        }
+        
+        // 减少数量
+        function decreaseQuantity(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+            } else {
+                cart = cart.filter(item => item.id !== productId);
+            }
+            
+            renderCart();
+        }
+        
+        // 增加数量
+        function increaseQuantity(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            item.quantity += 1;
+            renderCart();
+        }
+        
+        // 更新数量
+        function updateQuantity(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const newQuantity = parseInt(e.target.value);
+            
+            if (isNaN(newQuantity)) {
+                renderCart();
+                return;
+            }
+            
+            if (newQuantity < 1) {
+                cart = cart.filter(item => item.id !== productId);
+            } else {
+                const item = cart.find(item => item.id === productId);
+                item.quantity = newQuantity;
+            }
+            
+            renderCart();
+        }
+        
+        // 移除商品
+        function removeItem(e) {
+            const productId = parseInt(e.target.closest('span').getAttribute('data-id'));
+            cart = cart.filter(item => item.id !== productId);
+            renderCart();
+            showMessage('商品已移除');
+        }
+        
+        // 清空购物车
+        function clearCart() {
+            if (cart.length === 0) {
+                showMessage('购物车已经是空的');
+                return;
+            }
+            
+            cart = [];
+            renderCart();
+            showMessage('购物车已清空');
+        }
+        
+        // 复制购物清单
+        function copyCartList() {
+            if (cart.length === 0) {
+                showMessage('购物车是空的');
+                return;
+            }
+            
+            let listText = '=== 购物清单 ===\n\n';
+            
+            cart.forEach(item => {
+                listText += `商品: ${item.name}\n`;
+                listText += `单价: ¥${item.price.toFixed(2)}  数量: ${item.quantity}  小计: ¥${(item.price * item.quantity).toFixed(2)}\n\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            listText += `总计: ¥${total.toFixed(2)}`;
+            
+            navigator.clipboard.writeText(listText).then(() => {
+                showMessage('购物清单已复制');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                // 备用方法
+                const textarea = document.createElement('textarea');
+                textarea.value = listText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showMessage('购物清单已复制');
+            });
+        }
+        
+        // 显示消息
+        function showMessage(msg) {
+            messageEl.querySelector('span').textContent = msg;
+            messageEl.classList.add('show');
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 显示错误状态
+        function showError() {
+            categoryListEl.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>加载分类失败</p>
+                </div>
+            `;
+            
+            productListEl.innerHTML = `
+                <div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>加载商品数据失败</p>
+                    <p>请检查网络连接或稍后再试</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
