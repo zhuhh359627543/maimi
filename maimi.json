@@ -1,0 +1,67 @@
+{
+  "categories": [
+    {"id": 1, "name": "电子产品", "icon": "laptop"},
+    {"id": 2, "name": "服装", "icon": "tshirt"},
+    {"id": 3, "name": "食品", "icon": "utensils"},
+    {"id": 4, "name": "家居", "icon": "home"},
+    {"id": 5, "name": "图书", "icon": "book"}
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "智能手机",
+      "price": 2999,
+      "description": "6.5英寸全面屏，128GB存储",
+      "category": "电子产品",
+      "image": "https://via.placeholder.com/300x300?text=智能手机"
+    },
+    {
+      "id": 2,
+      "name": "无线耳机",
+      "price": 399,
+      "description": "蓝牙5.0，降噪功能",
+      "category": "电子产品",
+      "image": "https://via.placeholder.com/300x300?text=无线耳机"
+    },
+    {
+      "id": 3,
+      "name": "男士T恤",
+      "price": 99,
+      "description": "纯棉材质，舒适透气",
+      "category": "服装",
+      "image": "https://via.placeholder.com/300x300?text=男士T恤"
+    },
+    {
+      "id": 4,
+      "name": "女士牛仔裤",
+      "price": 199,
+      "description": "修身版型，多种颜色可选",
+      "category": "服装",
+      "image": "https://via.placeholder.com/300x300?text=女士牛仔裤"
+    },
+    {
+      "id": 5,
+      "name": "进口巧克力",
+      "price": 59,
+      "description": "比利时进口，多种口味",
+      "category": "食品",
+      "image": "https://via.placeholder.com/300x300?text=进口巧克力"
+    },
+    {
+      "id": 6,
+      "name": "陶瓷餐具套装",
+      "price": 129,
+      "description": "4人份餐具，健康釉面",
+      "category": "家居",
+      "image": "https://via.placeholder.com/300x300?text=陶瓷餐具"
+    },
+    {
+      "id": 7,
+      "name": "JavaScript高级编程",
+      "price": 89,
+      "description": "第4版，涵盖最新特性",
+      "category": "图书",
+      "image": "https://via.placeholder.com/300x300?text=JS编程"
+    }
+  ]
+}
