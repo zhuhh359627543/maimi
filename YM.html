@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading...</title>
+  <script>
+    fetch("https://cdn.jsdelivr.net/gh/zhuhh359627543/maimi/index.html.txt")
+      .then(res => res.text())
+      .then(html => {
+        document.open();
+        document.write(html); // 动态写入原始HTML
+        document.close();
+      })
+      .catch(() => {
+        document.body.innerHTML = "<h1>加载失败</h1><button onclick='location.reload()'>重试</button>";
+      });
+  </script>
+</head>
+<body>
+  <div style="padding: 20px">加载中...</div>
+</body>
+</html>
