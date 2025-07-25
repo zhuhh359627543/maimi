@@ -1463,19 +1463,17 @@ function copyOrder() {
     orderText += `序号  商品名称${' '.repeat(maxNameLength - 4)}          小计\n`;
     orderText += '-'.repeat(30 + maxNameLength) + '\n';
 
-    // 商品行
+    // 商品行（只显示袋数）
     cart.forEach((item, index) => {
         const qty = item.quantity;
-        const weight = item.weight;
-        const total = qty * weight;
         totalBags += qty;
-        totalWeight += total;
+        totalWeight += qty * item.weight;
 
-        // 构建每行内容，确保小计部分对齐
-        orderText += `${(index + 1).toString().padStart(2)}. ${item.name.padEnd(maxNameLength)}     ${qty}袋x${weight}斤=${total}斤\n`;
+        // 构建每行内容，确保袋数对齐
+        orderText += `${(index + 1).toString().padStart(2)}. ${item.name.padEnd(maxNameLength)}       ${qty}袋\n`;
     });
 
-    // 汇总行
+    // 汇总行（包含总重量）
     orderText += '-'.repeat(30 + maxNameLength) + '\n';
     orderText += `总计: ${cart.length}种商品         ${totalBags}袋  总重量 ${totalWeight}斤\n\n`;
     orderText += '--- 请核对后发微信 ---';
