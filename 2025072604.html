@@ -1476,7 +1476,7 @@ function copyOrder() {
     // 汇总行（包含总重量）
     orderText += '-'.repeat(30 + maxNameLength) + '\n';
     orderText += `总计: ${cart.length}种商品         ${totalBags}袋  总重量 ${totalWeight}斤\n\n`;
-    orderText += '--- 请核对后发微信 ---';
+    
 
     // 复制到剪贴板
     const copyBtnText = document.getElementById('copyBtnText');
