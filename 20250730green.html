@@ -1623,17 +1623,21 @@
             document.getElementById('productModal').style.display = 'none';
         }
 
-        // 切换购物车显示/隐藏
-        function toggleCart() {
-            cartOpen = !cartOpen;
-            const cartSection = document.getElementById('cartSection');
-            
-            if (cartOpen) {
-                cartSection.classList.add('open');
-            } else {
-                cartSection.classList.remove('open');
-            }
-        }
+		// 修改购物车切换逻辑
+		function toggleCart(forceState) {
+			if (typeof forceState !== 'undefined') {
+				cartOpen = forceState;
+			} else {
+				cartOpen = !cartOpen;
+			}
+			
+			const cartSection = document.getElementById('cartSection');
+			if (cartOpen) {
+				cartSection.classList.add('open');
+			} else {
+				cartSection.classList.remove('open');
+			}
+		}
 
         // 改变产品数量
         function changeQuantity(productId, change) {
@@ -1796,29 +1800,37 @@
                 });
                 
                 // 添加加减按钮事件
-                const minusBtn = cartItemElement.querySelector('.minus');
-                const plusBtn = cartItemElement.querySelector('.plus');
-                const qtyInput = cartItemElement.querySelector('.cart-quantity-input');
-                
-                minusBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    changeCartQuantity(item.id, -1);
-                });
-                
-                plusBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    changeCartQuantity(item.id, 1);
-                });
-                
-                // 添加输入框直接修改事件
-                qtyInput.addEventListener('change', (e) => {
-                    const newQty = parseInt(e.target.value);
-                    if (newQty > 0) {
-                        updateCartItemQuantity(item.id, newQty);
-                    } else {
-                        e.target.value = item.quantity;
-                    }
-                });
+        const minusBtn = cartItemElement.querySelector('.minus');
+        const plusBtn = cartItemElement.querySelector('.plus');
+        const qtyInput = cartItemElement.querySelector('.cart-quantity-input');
+        
+        minusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault(); // 防止默认行为
+            changeCartQuantity(item.id, -1);
+        });
+        
+        plusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault(); // 防止默认行为
+            changeCartQuantity(item.id, 1);
+        });
+        
+        // 添加输入框直接修改事件
+        qtyInput.addEventListener('change', (e) => {
+            e.stopPropagation();
+            const newQty = parseInt(e.target.value);
+            if (newQty > 0) {
+                updateCartItemQuantity(item.id, newQty);
+            } else {
+                e.target.value = item.quantity;
+            }
+        });
+        
+        // 添加输入框点击事件（允许获取焦点）
+        qtyInput.addEventListener('click', (e) => {
+            e.stopPropagation(); // 但仍然阻止冒泡到购物车外部
+        });
                 
                 cartItemsElement.appendChild(cartItemElement);
             });
