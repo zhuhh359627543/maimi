@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信内容分享工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a6dff 0%, #0d4db5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #07c160 0%, #05a84e 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            opacity: 0.95;
+            font-size: 18px;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .wechat-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -40px auto 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .wechat-icon i {
+            color: #07c160;
+            font-size: 48px;
+        }
+        
+        .content {
+            padding: 40px 30px 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 30px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #07c160;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 160px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 17px;
+            resize: vertical;
+            transition: all 0.3s;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        textarea:focus {
+            border-color: #07c160;
+            box-shadow: 0 0 0 4px rgba(7, 193, 96, 0.25), 
+                        inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .char-count {
+            text-align: right;
+            font-size: 15px;
+            color: #777;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 19px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .btn-share {
+            background: linear-gradient(90deg, #07c160 0%, #05a84e 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(7, 193, 96, 0.4);
+        }
+        
+        .btn-share:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(7, 193, 96, 0.5);
+        }
+        
+        .btn-share:active {
+            transform: translateY(2px);
+        }
+        
+        .btn-copy {
+            background: #fff;
+            border: 2px solid #07c160;
+            color: #07c160;
+            font-weight: 600;
+        }
+        
+        .btn-copy:hover {
+            background: #f0fff5;
+        }
+        
+        .instructions {
+            margin-top: 35px;
+            padding: 25px;
+            background: #f8faff;
+            border-radius: 18px;
+            color: #555;
+            line-height: 1.7;
+            border: 2px dashed #07c160;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 18px;
+            color: #07c160;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 14px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .instructions li strong {
+            color: #1a6dff;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #888;
+            font-size: 15px;
+            border-top: 1px solid #eee;
+            background: #f9fbfd;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 60px;
+            font-size: 17px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(7, 193, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(7, 193, 96, 0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .btn {
+                padding: 16px;
+                font-size: 17px;
+            }
+            
+            textarea {
+                height: 140px;
+                padding: 17px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .wechat-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .wechat-icon i {
+                font-size: 40px;
+            }
+            
+            .instructions {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fab fa-weixin"></i> 微信内容分享工具</h1>
+            <p>输入内容，一键分享给微信好友</p>
+        </div>
+        
+        <div class="wechat-icon">
+            <i class="fab fa-weixin"></i>
+        </div>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="share-text">
+                    <i class="fas fa-edit"></i> 输入要分享的内容：
+                </label>
+                <textarea id="share-text" placeholder="请输入您要分享的文字内容..."></textarea>
+                <div class="char-count"><span id="char-count">0</span>/500</div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-share pulse" id="share-btn">
+                    <i class="fas fa-share-alt"></i> 分享给微信好友
+                </button>
+                <button class="btn btn-copy" id="copy-btn">
+                    <i class="fas fa-copy"></i> 复制内容
+                </button>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
+                <ol>
+                    <li>在文本框中<strong>输入您要分享的内容</strong></li>
+                    <li>点击"分享给微信好友"按钮</li>
+                    <li>系统将自动打开微信并进入分享界面</li>
+                    <li>选择您要<strong>分享的好友或群组</strong></li>
+                    <li>点击发送完成分享</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 微信内容分享工具 | 简单快捷的分享方式</p>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>内容已复制到剪贴板！</span>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const shareText = document.getElementById('share-text');
+            const shareBtn = document.getElementById('share-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const charCount = document.getElementById('char-count');
+            const toast = document.getElementById('toast');
+            
+            // 字符计数
+            shareText.addEventListener('input', function() {
+                const text = shareText.value;
+                charCount.textContent = text.length;
+                charCount.style.color = text.length > 500 ? '#ff4757' : '#777';
+            });
+            
+            // 分享功能
+            shareBtn.addEventListener('click', function() {
+                const text = shareText.value.trim();
+                
+                if (!text) {
+                    showToast('请输入要分享的内容！', false);
+                    shareText.focus();
+                    return;
+                }
+                
+                if (text.length > 500) {
+                    showToast('内容长度不能超过500个字符！', false);
+                    return;
+                }
+                
+                // 添加按钮动画
+                const originalHTML = shareBtn.innerHTML;
+                shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在打开微信...';
+                shareBtn.disabled = true;
+                
+                // 模拟打开微信的延迟
+                setTimeout(() => {
+                    // 使用微信协议打开微信
+                    window.location.href = `weixin://dl/chat?message=${encodeURIComponent(text)}`;
+                    
+                    // 恢复按钮状态（如果微信协议未生效）
+                    setTimeout(() => {
+                        shareBtn.innerHTML = originalHTML;
+                        shareBtn.disabled = false;
+                    }, 3000);
+                }, 1000);
+            });
+            
+            // 复制功能
+            copyBtn.addEventListener('click', function() {
+                const text = shareText.value.trim();
+                
+                if (!text) {
+                    showToast('请输入要分享的内容！', false);
+                    return;
+                }
+                
+                shareText.select();
+                try {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast('内容已复制到剪贴板！');
+                    });
+                } catch (err) {
+                    // 兼容旧浏览器
+                    document.execCommand('copy');
+                    showToast('内容已复制到剪贴板！');
+                }
+            });
+            
+            // 显示提示信息
+            function showToast(message, isSuccess = true) {
+                const icon = isSuccess ? 
+                    '<i class="fas fa-check-circle"></i>' : 
+                    '<i class="fas fa-exclamation-circle"></i>';
+                
+                toast.innerHTML = icon + ' <span>' + message + '</span>';
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
